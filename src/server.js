@@ -11,7 +11,7 @@ async function bootstrap() {
 
   app.use(express.json()); // Add parentheses to call the express.json() middleware
   app.use(cors());
-  app.use(bookRouter);
+  app.use("/books",bookRouter);
 
   try {
     await sequelize.authenticate();
