@@ -5,6 +5,7 @@ export const getAllBooks = async (req, res) => {
     const books = await Book.findAll();
     res.status(200).json({ data: books, success: true, get: true });
   } catch (err) {
+    console.log("Error when getting all books: ", err);
     res
       .status(500)
       .json({ msg: "Internal Server Error", success: false, get: false });
@@ -18,10 +19,11 @@ export const getByIdBook = async (req, res) => {
     const book = await Book.findByPk(bookId);
 
     if (!book) {
-      return res.status(404).json("Book is not found");
+      return res.status(404).json({ msg: "Book is not found", success: false });
     }
     res.status(200).json({ data: book, success: true, get: true });
   } catch (err) {
+    console.log("Error when getting book by ID: ", err);
     res
       .status(500)
       .json({ msg: "Internal Server Error", success: false, get: false });
@@ -30,9 +32,15 @@ export const getByIdBook = async (req, res) => {
 
 export const createBook = async (req, res) => {
   try {
-    const { title, discription, pages, author } = req.body;
+    const { title, description, page, author } = req.body;
     const image = req.file ? req.file.filename : null;
-    const book = Book.create({ title, discription, pages, author });
+    const book = await Book.create({
+      title,
+      description,
+      page,
+      author,
+      image,
+    });
     res.status(201).json({ data: book, success: true, created: true });
   } catch (err) {
     console.log("Error when creating Book: ", err);
@@ -45,20 +53,21 @@ export const createBook = async (req, res) => {
 export const updateBook = async (req, res) => {
   const bookId = req.params.id;
   try {
-    const { title, discription, pages, author } = req.body;
+    const { title, description, page, author } = req.body;
     const image = req.file ? req.file.filename : null;
 
-    const [updated] = await Book.update(
-      { title, discription, pages, author, image },
+    const updated = await Book.update(
+      { title, description, page, author, image },
       { where: { id: bookId } }
     );
-    if (updated) {
-      const updateBook = await Book.findByPk(bookId);
-      res.status(200).json({ data: updateBook, success: true, updated: true });
+    if (updated[0]) {
+      const updatedBook = await Book.findByPk(bookId);
+      res.status(200).json({ data: updatedBook, success: true, updated: true });
+    } else {
+      return res.status(404).json({ msg: "Book is not found", success: false });
     }
-    return res.status(404).json("Book is not found");
   } catch (err) {
-    console.log("Erro when updating book: ", err);
+    console.log("Error when updating book: ", err);
     res
       .status(500)
       .json({ msg: "Internal Server Error", success: false, updated: false });
@@ -69,7 +78,7 @@ export const deleteAllBooks = async (req, res) => {
   try {
     await Book.destroy({ truncate: true });
     res.status(204).json({
-      msg: " All Books are deleted successfuly",
+      msg: "All Books are deleted successfully",
       success: true,
       deleted: true,
     });
@@ -88,20 +97,19 @@ export const deleteByIdBook = async (req, res) => {
     const deleted = await Book.destroy({ where: { id: bookId } });
     if (deleted) {
       res.status(204).json({
-        msg: "Book is deleted succesfuly",
+        msg: "Book is deleted successfully",
         success: true,
         deleted: true,
       });
+    } else {
+      return res
+        .status(404)
+        .json({ msg: "Book is not found", success: false, deleted: false });
     }
-    return res
-      .status(404)
-      .json({ msg: "Book is not found", success: false, deleted: false });
   } catch (err) {
     console.log("Error when deleting book: ", err);
-    res.status(500).json({
-      msg: "Internal Server Error",
-      success: false,
-      deleted: false,
-    });
+    res
+      .status(500)
+      .json({ msg: "Internal Server Error", success: false, deleted: false });
   }
 };

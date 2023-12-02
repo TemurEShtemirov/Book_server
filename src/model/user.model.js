@@ -29,13 +29,6 @@ const User = sequelize.define("User", {
   },
 });
 
-// Create the table if it doesn't exist
-User.sync()
-  .then(() => {
-    console.log("User table created successfully.");
-  })
-  .catch((err) => {
-    console.error("Error creating User table:", err);
-  });
+
 
 export default User;
