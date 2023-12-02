@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 
-const User = sequelize.define("User", {
+const User = sequelize.define("users", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -15,8 +15,12 @@ const User = sequelize.define("User", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  avatar:{
+    type:DataTypes.TEXT,
+    allowNull:false
+  },
   phone_number: {
-    type: DataTypes.STRING(20),
+    type: DataTypes.STRING(100),
     allowNull: false,
   },
   email: {
@@ -27,6 +31,8 @@ const User = sequelize.define("User", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+},{
+  timestamps:true
 });
 
 

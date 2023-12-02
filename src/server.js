@@ -3,6 +3,7 @@ import sequelize from "./config/db.js";
 import cors from "cors";
 import "dotenv/config.js";
 import bookRouter from "./routes/book.router.js";
+import userRouter from "./routes/user.router.js";
 
 async function bootstrap() {
   const app = express();
@@ -11,7 +12,8 @@ async function bootstrap() {
 
   app.use(express.json()); // Add parentheses to call the express.json() middleware
   app.use(cors());
-  app.use("/books",bookRouter);
+  app.use("/user", userRouter);
+  app.use("/books", bookRouter);
 
   try {
     await sequelize.authenticate();
