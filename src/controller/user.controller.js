@@ -37,6 +37,15 @@ export const registerUser = async (req, res) => {
     const { first_name, last_name, phone_number, email, password } = req.body;
     const avatar = req.file ? req.file.filename : null;
 
+    // Check password length
+    if (password.length < 8) {
+      return res.status(400).json({
+        msg: "Password should be at least 8 characters long",
+        success: false,
+        created: false,
+      });
+    }
+
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -62,6 +71,16 @@ export const updateUser = async (req, res) => {
   try {
     const { first_name, last_name, phone_number, email, password } = req.body;
     const avatar = req.file ? req.file.filename : null;
+   
+    if (password.length < 8) {
+      return res.status(400).json({
+        msg: "Password should be at least 8 characters long",
+        success: false,
+        created: false,
+      });
+    }
+
+
     // Hash the password if it's provided
     let hashedPassword = null;
     if (password) {
