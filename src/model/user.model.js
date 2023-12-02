@@ -7,27 +7,35 @@ const User = sequelize.define("User", {
     primaryKey: true,
     autoIncrement: true,
   },
-  firstName: {
+  first_name: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  lastName: {
+  last_name: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  phoneNumber: {
-    type: DataTypes.STRING,
+  phone_number: {
+    type: DataTypes.STRING(20),
     allowNull: false,
   },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
   },
   password: {
     type: DataTypes.STRING,
     allowNull: false,
   },
 });
+
+// Create the table if it doesn't exist
+User.sync()
+  .then(() => {
+    console.log("User table created successfully.");
+  })
+  .catch((err) => {
+    console.error("Error creating User table:", err);
+  });
 
 export default User;

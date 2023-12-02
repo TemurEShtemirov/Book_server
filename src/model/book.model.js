@@ -1,6 +1,5 @@
-import { DataTypes } from "sequelize";
-import 
-
+import { DataTypes, Sequelize } from "sequelize";
+import sequelize from "../config/db.js";
 
 // Define the Book model
 const Book = sequelize.define("Book", {
@@ -48,4 +47,4 @@ Book.sync()
     console.error("Error creating Book table:", err);
   });
 
-export default Book
+export default Book;
